@@ -39,6 +39,7 @@ function main() {
             .add(delay, 'minutes').toDate();
         const startDate = moment(doorTime).add(10, 'minutes').toDate();
         const endDate = moment(startDate).add(duration, 'minutes').toDate();
+        const mvtkExcludeFlg = "0";
         const eventAttributes = {
             typeOf: chevre.factory.eventType.ScreeningEvent,
             name: eventSeries.name,
@@ -54,7 +55,8 @@ function main() {
             },
             workPerformed: eventSeries.workPerformed,
             superEvent: eventSeries,
-            ticketTypeGroup: ticketTypeGroup.id
+            ticketTypeGroup: ticketTypeGroup.id,
+            mvtkExcludeFlg: mvtkExcludeFlg
         };
         yield eventRepo.saveScreeningEvent({ attributes: eventAttributes });
     });

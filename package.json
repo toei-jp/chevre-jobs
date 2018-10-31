@@ -9,7 +9,7 @@
     }
   ],
   "dependencies": {
-    "@toei-jp/chevre-domain": "^1.0.0-alpha.20",
+    "@toei-jp/chevre-domain": "^1.0.0-alpha.21",
     "debug": "^3.2.6",
     "moment": "^2.22.2"
   },

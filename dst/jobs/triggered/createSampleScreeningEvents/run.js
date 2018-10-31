@@ -30,16 +30,30 @@ function main() {
         const movieTheater = yield placeRepo.findMovieTheaterByBranchCode(eventSeries.location.branchCode);
         const screeningRooms = movieTheater.containsPlace;
         const screeningRoom = screeningRooms[Math.floor(Math.random() * screeningRooms.length)];
+        const maximumAttendeeCapacity = screeningRoom.containsPlace.reduce((a, b) => a + b.containsPlace.length, 0);
         const ticketTypeGroups = yield ticketTypeRepo.searchTicketTypeGroups({});
         // 券種グループをランダム選定
         const ticketTypeGroup = ticketTypeGroups[Math.floor(Math.random() * ticketTypeGroups.length)];
         const duration = Math.floor((Math.random() * 90) + 90);
         const delay = Math.floor(Math.random() * 780);
-        const doorTime = moment(`${moment().add(7, 'days').format('YYYY-MM-DD')}T09:00:00+09:00`)
+        const doorTime = moment(`${moment().add(Math.floor(Math.random() * 7), 'days').format('YYYY-MM-DD')}T09:00:00+09:00`)
             .add(delay, 'minutes').toDate();
         const startDate = moment(doorTime).add(10, 'minutes').toDate();
         const endDate = moment(startDate).add(duration, 'minutes').toDate();
         const mvtkExcludeFlg = 0;
+        const offers = {
+            typeOf: 'Offer',
+            priceCurrency: chevre.factory.priceCurrency.JPY,
+            availabilityEnds: endDate,
+            availabilityStarts: moment(startDate).add(-7, 'days').toDate(),
+            validFrom: moment(startDate).add(-3, 'days').toDate(),
+            validThrough: endDate,
+            eligibleQuantity: {
+                value: 4,
+                unitCode: chevre.factory.unitCode.C62,
+                typeOf: 'QuantitativeValue'
+            }
+        };
         const eventAttributes = {
             typeOf: chevre.factory.eventType.ScreeningEvent,
             name: eventSeries.name,
@@ -56,6 +70,11 @@ function main() {
             workPerformed: eventSeries.workPerformed,
             superEvent: eventSeries,
             ticketTypeGroup: ticketTypeGroup.id,
+            offers: offers,
+            maximumAttendeeCapacity: maximumAttendeeCapacity,
+            remainingAttendeeCapacity: maximumAttendeeCapacity,
+            checkInCount: 0,
+            attendeeCount: 0,
             mvtkExcludeFlg: mvtkExcludeFlg,
             maxSeatNumber: screeningRoom.containsPlace.length,
             preSaleFlg: 0

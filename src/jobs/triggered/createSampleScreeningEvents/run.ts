@@ -34,7 +34,6 @@ async function main() {
         .add(delay, 'minutes').toDate();
     const startDate = moment(doorTime).add(10, 'minutes').toDate();
     const endDate = moment(startDate).add(duration, 'minutes').toDate();
-    const mvtkExcludeFlg = 0;
     const offers: chevre.factory.event.screeningEvent.IOffer = {
         typeOf: 'Offer',
         priceCurrency: chevre.factory.priceCurrency.JPY,
@@ -43,7 +42,8 @@ async function main() {
         validFrom: moment(startDate).add(-3, 'days').toDate(),
         validThrough: endDate,
         eligibleQuantity: {
-            value: 4,
+            value: 1,
+            maxValue: 4,
             unitCode: chevre.factory.unitCode.C62,
             typeOf: 'QuantitativeValue'
         }
@@ -68,10 +68,7 @@ async function main() {
         maximumAttendeeCapacity: maximumAttendeeCapacity,
         remainingAttendeeCapacity: maximumAttendeeCapacity,
         checkInCount: 0,
-        attendeeCount: 0,
-        mvtkExcludeFlg: mvtkExcludeFlg,
-        maxSeatNumber: screeningRoom.containsPlace.length,
-        preSaleFlg: 0
+        attendeeCount: 0
     };
     await eventRepo.saveScreeningEvent({ attributes: eventAttributes });
 }
